@@ -1,4 +1,22 @@
 <?php
+// session_start();
+// error_reporting(0);
+// include('includes/config.php');
+// if(strlen($_SESSION['alogin'])==0)
+// 	{	
+// header('location:index.php');
+// }
+// else{
+// if(isset($_GET['del']))
+// {
+// $id=$_GET['del'];
+// $sql = "delete from tblbrands  WHERE id=:id";
+// $query = $dbh->prepare($sql);
+// $query -> bindParam(':id',$id, PDO::PARAM_STR);
+// $query -> execute();
+// $msg="Page data updated  successfully";
+
+// }
 session_start();
 error_reporting(0);
 include('includes/config.php');
@@ -7,16 +25,34 @@ if(strlen($_SESSION['alogin'])==0)
 header('location:index.php');
 }
 else{
-if(isset($_GET['del']))
-{
-$id=$_GET['del'];
-$sql = "delete from tblbrands  WHERE id=:id";
+if(isset($_REQUEST['eid']))
+	{
+$eid=intval($_GET['eid']);
+$status="2";
+$sql = "UPDATE tblusers SET Status=:status WHERE  id=:eid";
 $query = $dbh->prepare($sql);
-$query -> bindParam(':id',$id, PDO::PARAM_STR);
+$query -> bindParam(':status',$status, PDO::PARAM_STR);
+$query-> bindParam(':eid',$eid, PDO::PARAM_STR);
 $query -> execute();
-$msg="Page data updated  successfully";
 
+$msg="User Successfully Rejected";
 }
+
+
+if(isset($_REQUEST['aeid']))
+	{
+$aeid=intval($_GET['aeid']);
+$status=1;
+
+$sql = "UPDATE tblusers SET Status=:status WHERE  id=:aeid";
+$query = $dbh->prepare($sql);
+$query -> bindParam(':status',$status, PDO::PARAM_STR);
+$query-> bindParam(':aeid',$aeid, PDO::PARAM_STR);
+$query -> execute();
+
+$msg="User Request Successfully Approved";
+}
+
 
 
 
@@ -94,53 +130,74 @@ $msg="Page data updated  successfully";
 								<table id="zctb" class="display table table-striped table-bordered table-hover" cellspacing="0" width="100%">
 									<thead>
 										<tr>
-										<th>#</th>
-												<th> Name</th>
+										    <th>#</th>
+											<th> Name</th>
 											<th>Email </th>
 											<th>Contact no</th>
-										<th>DOB</th>
-										<th>Address</th>
-										<th>City</th>
-										<th>Country</th>
-										<th>Reg Date</th>
-										
+											<th>DOB</th>
+											<th>Address</th>
+											<th>City</th>
+											<th>Country</th>
+											<th>Reg Date</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
 										</tr>
 									</thead>
 									<tfoot>
 										<tr>
-										<th>#</th>
+											<th>#</th>
 											<th> Name</th>
 											<th>Email </th>
 											<th>Contact no</th>
-										<th>DOB</th>
-										<th>Address</th>
-										<th>City</th>
-										<th>Country</th>
-										<th>Reg Date</th>
+											<th>DOB</th>
+											<th>Address</th>
+											<th>City</th>
+											<th>Country</th>
+											<th>Reg Date</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
 										</tr>
 										</tr>
 									</tfoot>
 									<tbody>
+									    <?php $sql = "SELECT * from  tblusers ";
 
-									<?php $sql = "SELECT * from  tblusers ";
-$query = $dbh -> prepare($sql);
-$query->execute();
-$results=$query->fetchAll(PDO::FETCH_OBJ);
-$cnt=1;
-if($query->rowCount() > 0)
-{
-foreach($results as $result)
-{				?>	
+										$query = $dbh -> prepare($sql);
+										$query->execute();
+										$results=$query->fetchAll(PDO::FETCH_OBJ);
+										$cnt=1;
+										if($query->rowCount() > 0)
+										{
+										foreach($results as $result)
+										{				
+										?>	
 										<tr>
 											<td><?php echo htmlentities($cnt);?></td>
 											<td><?php echo htmlentities($result->FullName);?></td>
 											<td><?php echo htmlentities($result->EmailId);?></td>
 											<td><?php echo htmlentities($result->ContactNo);?></td>
-	<td><?php echo htmlentities($result->dob);?></td>
+	                                        <td><?php echo htmlentities($result->dob);?></td>
 											<td><?php echo htmlentities($result->Address);?></td>
 											<td><?php echo htmlentities($result->City);?></td>
 											<td><?php echo htmlentities($result->Country);?></td>
 											<td><?php echo htmlentities($result->RegDate);?></td>
+											<td>
+												<?php
+													if($result->Status==0)
+													{
+													echo htmlentities('Not Approved yet');
+													} else if ($result->Status==1) {
+													echo htmlentities('Approved');
+													}
+													else{
+														echo htmlentities('Cancelled');
+													}
+												?>
+										    </td>
+											<td><a href="reg-users.php?aeid=<?php echo htmlentities($result->id);?>" onclick="return confirm('Do you really wnt to Approve the user')"> Approve </a> /
+											<a href="reg-users.php?eid=<?php echo htmlentities($result->id);?>" onclick="return confirm('Do you really want to Reject The user')"> Reject</a>
+											</td>
+
 										</tr>
 										<?php $cnt=$cnt+1; }} ?>
 										
