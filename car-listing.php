@@ -79,28 +79,30 @@ error_reporting(0);
       <div class="col-md-9 col-md-push-3">
         <div class="result-sorting-wrapper">
           <div class="sorting-count">
-<?php 
-//Query for Listing count
-$sql = "SELECT id from tblvehicles";
-$query = $dbh -> prepare($sql);
-$query->bindParam(':vhid',$vhid, PDO::PARAM_STR);
-$query->execute();
-$results=$query->fetchAll(PDO::FETCH_OBJ);
-$cnt=$query->rowCount();
-?>
-<p><span><?php echo htmlentities($cnt);?> Listings</span></p>
-</div>
-</div>
+            <?php 
+            //Query for Listing count
+            $sql = "SELECT id from tblvehicles";
+            $query = $dbh -> prepare($sql);
+            $query->bindParam(':vhid',$vhid, PDO::PARAM_STR);
+            $query->execute();
+            $results=$query->fetchAll(PDO::FETCH_OBJ);
+            $cnt=$query->rowCount();
+            ?>
 
-<?php $sql = "SELECT tblvehicles.*,tblbrands.BrandName,tblbrands.id as bid  from tblvehicles join tblbrands on tblbrands.id=tblvehicles.VehiclesBrand";
-$query = $dbh -> prepare($sql);
-$query->execute();
-$results=$query->fetchAll(PDO::FETCH_OBJ);
-$cnt=1;
-if($query->rowCount() > 0)
-{
-foreach($results as $result)
-{  ?>
+            <p><span><?php echo htmlentities($cnt);?> Listings</span></p>
+          </div>
+      </div>
+     
+
+        <?php $sql = "SELECT tblvehicles.*,tblbrands.BrandName,tblbrands.id as bid  from tblvehicles join tblbrands on tblbrands.id=tblvehicles.VehiclesBrand";
+        $query = $dbh -> prepare($sql);
+        $query->execute();
+        $results=$query->fetchAll(PDO::FETCH_OBJ);
+        $cnt=1;
+        if($query->rowCount() > 0)
+        {
+        foreach($results as $result)
+        {  ?>
         <div class="product-listing-m gray-bg">
           <div class="product-listing-img"><img src="admin/img/vehicleimages/<?php echo htmlentities($result->Vimage1);?>" class="img-responsive" alt="Image" /> </a> 
           </div>
@@ -114,7 +116,9 @@ foreach($results as $result)
             </ul>
             <a href="vehical-details.php?vhid=<?php echo htmlentities($result->id);?>" class="btn">View Details <span class="angle_arrow"><i class="fa fa-angle-right" aria-hidden="true"></i></span></a>
           </div>
+          
         </div>
+       
       <?php }} ?>
          </div>
       
@@ -146,10 +150,10 @@ foreach($results as $result)
               </div>
               <div class="form-group select">
                 <select class="form-control" name="fueltype">
-                  <option>Select Fuel Type</option>
-<option value="Petrol">Petrol</option>
-<option value="Diesel">Diesel</option>
-<option value="CNG">CNG</option>
+                    <option>Select Fuel Type</option>
+                    <option value="Petrol">Petrol</option>
+                    <option value="Diesel">Diesel</option>
+                    <option value="CNG">CNG</option>
                 </select>
               </div>
              
