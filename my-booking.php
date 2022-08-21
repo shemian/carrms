@@ -116,20 +116,19 @@ foreach($results as $result)
           <h5 class="uppercase underline">My Bookings </h5>
           <div class="my_vehicles_list">
             <ul class="vehicle_listing">
-<?php
-$useremail=$_SESSION['login'];
- $sql = "SELECT tblvehicles.Vimage1 as Vimage1,tblvehicles.VehiclesTitle,tblvehicles.id as vid,tblbrands.BrandName,tblbooking.FromDate,tblbooking.ToDate,tblbooking.message,tblbooking.Status  from tblbooking join tblvehicles on tblbooking.VehicleId=tblvehicles.id join tblbrands on tblbrands.id=tblvehicles.VehiclesBrand where tblbooking.userEmail=:useremail";
-$query = $dbh -> prepare($sql);
-$query-> bindParam(':useremail', $useremail, PDO::PARAM_STR);
-$query->execute();
-$results=$query->fetchAll(PDO::FETCH_OBJ);
-$cnt=1;
-if($query->rowCount() > 0)
-{
-foreach($results as $result)
-{  ?>
-
-<li>
+            <?php
+            $useremail=$_SESSION['login'];
+            $sql = "SELECT tblvehicles.Vimage1 as Vimage1,tblvehicles.VehiclesTitle,tblvehicles.id as vid,tblbrands.BrandName,tblbooking.FromDate,tblbooking.ToDate,tblbooking.message,tblbooking.Status  from tblbooking join tblvehicles on tblbooking.VehicleId=tblvehicles.id join tblbrands on tblbrands.id=tblvehicles.VehiclesBrand where tblbooking.userEmail=:useremail";
+            $query = $dbh -> prepare($sql);
+            $query-> bindParam(':useremail', $useremail, PDO::PARAM_STR);
+            $query->execute();
+            $results=$query->fetchAll(PDO::FETCH_OBJ);
+            $cnt=1;
+            if($query->rowCount() > 0)
+            {
+            foreach($results as $result)
+            {  ?>
+            <li>
                 <div class="vehicle_img"> <a href="vehical-details.php?vhid=<?php echo htmlentities($result->vid);?>""><img src="admin/img/vehicleimages/<?php echo htmlentities($result->Vimage1);?>" alt="image"></a> </div>
                 <div class="vehicle_title">
                   <h6><a href="vehical-details.php?vhid=<?php echo htmlentities($result->vid);?>""> <?php echo htmlentities($result->BrandName);?> , <?php echo htmlentities($result->VehiclesTitle);?></a></h6>

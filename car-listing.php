@@ -4,6 +4,7 @@ include('includes/config.php');
 error_reporting(0);
 ?>
 
+
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
@@ -91,10 +92,22 @@ error_reporting(0);
 
             <p><span><?php echo htmlentities($cnt);?> Listings</span></p>
           </div>
+          <?php if($email = $_SESSION['login'])
+          
+          { 
+$sql = "SELECT Status from tblusers WHERE EmailId = $email";
+           
+
+            ?>
           <div style = "position:relative;left:500px;height:40px">
-          if
-          <a href="post-vehicle.php" class="btn">Request To List<span class="angle_arrow"><i class="fa fa-angle-right" aria-hidden="true"></i></span></a>
+          <a href="post-vehicle.php" class="btn">List A Car<span class="angle_arrow"><i class="fa fa-angle-right" aria-hidden="true"></i></span></a>     
           </div>
+           <?php }
+           else { ?>
+           <div style = "position:relative;left:500px;height:40px">
+           <a href="#loginform" class="btn btn-xs uppercase" data-toggle="modal" data-dismiss="modal">Request For Listing </a>
+           </div>
+           <?php } ?>
       </div>
      
 
