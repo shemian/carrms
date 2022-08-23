@@ -1,7 +1,8 @@
 <?php 
 session_start();
 include('includes/config.php');
-error_reporting(0);
+if(strlen($email = $_SESSION['login'])){
+// error_reporting(0);
 ?>
 
 
@@ -82,41 +83,39 @@ error_reporting(0);
           <div class="sorting-count">
             <?php 
             //Query for Listing count
-            $sql = "SELECT id from tblvehicles";
+            include('user-filter.php');
+            $user_id=getLoggedInUserId($email, $dbh);
+            
+
+            $sql = "SELECT id, user_id, VehiclesTitle from tblvehicles WHERE tblvehicles.user_id=:user_id";
             $query = $dbh -> prepare($sql);
-            $query->bindParam(':vhid',$vhid, PDO::PARAM_STR);
+            $query->bindParam(':user_id',$user_id, PDO::PARAM_STR);
             $query->execute();
             $results=$query->fetchAll(PDO::FETCH_OBJ);
             $cnt=$query->rowCount();
+            if($cnt>0){
+              foreach($results as $result){
+                echo $result->VehiclesTitle;
+              }
+             
+            }
+            else{
+              echo 'oops no';
+            }
             ?>
 
             <p><span><?php echo htmlentities($cnt);?> My Listings</span></p>
           </div>
-          <?php if($email = $_SESSION['login'])
-          
-          { 
-            $sql = "SELECT Status from tblusers WHERE EmailId =:status";
-            $query = $dbh -> prepare($sql);
-            $query -> bindParam(':email',$email, PDO::PARAM_STR);
-            $query->execute();
-            $results=$query->fetchAll(PDO::FETCH_OBJ);
-            // echo $results;
            
-
-            ?>
           <div style = "position:relative;left:500px;height:40px">
           <a href="post-vehicle.php" class="btn">List A Car<span class="angle_arrow"><i class="fa fa-angle-right" aria-hidden="true"></i></span></a>     
           </div>
-           <?php }
-           else { ?>
-           <div style = "position:relative;left:500px;height:40px">
-           <a href="#loginform" class="btn btn-xs uppercase" data-toggle="modal" data-dismiss="modal">Request For Listing </a>
-           </div>
-           <?php } ?>
+          
       </div>
      
 
         <?php $sql = "SELECT tblvehicles.*,tblbrands.BrandName,tblbrands.id as bid  from tblvehicles join tblbrands on tblbrands.id=tblvehicles.VehiclesBrand";
+        
         $query = $dbh -> prepare($sql);
         $query->execute();
         $results=$query->fetchAll(PDO::FETCH_OBJ);
@@ -151,10 +150,15 @@ error_reporting(0);
           </div>
           <div class="recent_addedcars">
             <ul>
-              <?php $sql = "SELECT tblvehicles.*,tblbrands.BrandName,tblbrands.id as bid  from tblvehicles join tblbrands on tblbrands.id=tblvehicles.VehiclesBrand order by id desc limit 4";
+              <?php
+          
+              
+              $sql = "SELECT user_id,tblvehicles.*,tblbrands.BrandName,tblbrands.id as bid  from tblvehicles join tblbrands on tblbrands.id=tblvehicles.VehiclesBrand order by id desc limit 4 WHERE tblvehicles.user_id=:user_id ";
               $query = $dbh -> prepare($sql);
+              $query->bindParam(':user_id',$user_id, PDO::PARAM_STR);
               $query->execute();
-              $results=$query->fetchAll(PDO::FETCH_OBJ);
+              $results=$query->fetch(PDO::FETCH_OBJ);
+              echo $results->user_id;
               $cnt=1;
               if($query->rowCount() > 0)
               {
@@ -211,3 +215,8 @@ error_reporting(0);
 
 </body>
 </html>
+<?php } 
+else{
+    header('location:#loginform');
+    
+ }?>
