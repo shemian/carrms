@@ -114,13 +114,14 @@ if(strlen($email = $_SESSION['login'])){
       </div>
      
 
-        <?php $sql = "SELECT tblvehicles.*,tblbrands.BrandName,tblbrands.id as bid  from tblvehicles join tblbrands on tblbrands.id=tblvehicles.VehiclesBrand";
-        
+        <?php 
+        $sql = "SELECT tblvehicles.*,tblbrands.BrandName,tblbrands.id as bid  from tblvehicles join tblbrands on tblbrands.id=tblvehicles.VehiclesBrand WHERE tblvehicles.user_id=:user_id";
         $query = $dbh -> prepare($sql);
+        $query->bindParam(':user_id',$user_id, PDO::PARAM_STR);
         $query->execute();
         $results=$query->fetchAll(PDO::FETCH_OBJ);
-        $cnt=1;
-        if($query->rowCount() > 0)
+        $cnt=$query->rowCount();
+        if($cnt> 0)
         {
         foreach($results as $result)
         {  ?>

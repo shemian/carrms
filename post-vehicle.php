@@ -3,13 +3,9 @@ session_start();
 error_reporting(0);
 include('includes/config.php');
 if(strlen($email = $_SESSION['login'])){
-    $sql ="SELECT id FROM tblusers WHERE EmailId=:email ";
-    $query= $dbh -> prepare($sql);
-    $query-> bindParam(':email', $email, PDO::PARAM_STR);
-    $query-> execute();
-    $result=$query->fetch(PDO::FETCH_OBJ);
-    $user_id = $result->id;
-    echo $user_id;
+   include('user-filter.php');
+   $user_id =getLoggedInUserId($email, $dbh);
+  
 
 if(isset($_POST['submit']))
 {
