@@ -94,17 +94,12 @@ if(strlen($email = $_SESSION['login'])){
             $results=$query->fetchAll(PDO::FETCH_OBJ);
             $cnt=$query->rowCount();
             if($cnt>0){
-              foreach($results as $result){
-                echo $result->VehiclesTitle;
-              }
              
             }
-            else{
-              echo 'oops no';
-            }
+          
             ?>
 
-            <p><span><?php echo htmlentities($cnt);?> My Listings</span></p>
+            <p>My Listings: <span><?php echo htmlentities($cnt);?></span></p>
           </div>
            
           <div style = "position:relative;left:500px;height:40px">
@@ -154,14 +149,13 @@ if(strlen($email = $_SESSION['login'])){
               <?php
           
               
-              $sql = "SELECT user_id,tblvehicles.*,tblbrands.BrandName,tblbrands.id as bid  from tblvehicles join tblbrands on tblbrands.id=tblvehicles.VehiclesBrand order by id desc limit 4 WHERE tblvehicles.user_id=:user_id ";
+              $sql = "SELECT tblvehicles.*,tblbrands.BrandName,tblbrands.id as bid  from tblvehicles join tblbrands on tblbrands.id=tblvehicles.VehiclesBrand WHERE tblvehicles.user_id=:user_id";
               $query = $dbh -> prepare($sql);
               $query->bindParam(':user_id',$user_id, PDO::PARAM_STR);
               $query->execute();
-              $results=$query->fetch(PDO::FETCH_OBJ);
-              echo $results->user_id;
-              $cnt=1;
-              if($query->rowCount() > 0)
+              $results=$query->fetchAll(PDO::FETCH_OBJ);
+              $cnt=$query->rowCount();
+              if($cnt> 0)
               {
               foreach($results as $result)
               {  ?>
