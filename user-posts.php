@@ -132,7 +132,12 @@ if(strlen($email = $_SESSION['login'])){
             <li><i class="fa fa-calendar" aria-hidden="true"></i><?php echo htmlentities($result->ModelYear);?> model</li>
             <li><i class="fa fa-car" aria-hidden="true"></i><?php echo htmlentities($result->FuelType);?></li>
           </ul>
-          <a href="vehical-details.php?vhid=<?php echo htmlentities($result->id);?>" class="btn">View Details <span class="angle_arrow"><i class="fa fa-angle-right" aria-hidden="true"></i></span></a>
+          <div class="row">
+            <div class="col-md-4"><a href="vehical-details.php?vhid=<?php echo htmlentities($result->id);?>" class="btn">View<span><i class="fa fa-eye" aria-hidden="true"></i></span></a></div>
+            <div class="col-md-4"><a href="vehical-details.php?vhid=<?php echo htmlentities($result->id);?>" class="btn">Update<span><i class="fa fa-book" aria-hidden="true"></i></span></a></div>
+            <div class="col-md-4"><a href="vehical-details.php?vhid=<?php echo htmlentities($result->id);?>" class="btn"><span><i class="fa fa-trash" aria-hidden="true"></i></span></a></div>
+          </div>
+          
         </div>
       </div>
       <?php }} ?>

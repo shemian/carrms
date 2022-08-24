@@ -95,17 +95,14 @@ error_reporting(0);
           <?php if($email = $_SESSION['login'])
           
           { 
-$sql = "SELECT Status from tblusers WHERE EmailId = $email";
-           
-
             ?>
           <div style = "position:relative;left:500px;height:40px">
-          <a href="post-vehicle.php" class="btn">List A Car<span class="angle_arrow"><i class="fa fa-angle-right" aria-hidden="true"></i></span></a>     
+          <a href="post-vehicle.php" class="btn">List Vehicle<span class="angle_arrow"><i class="fa fa-angle-right" aria-hidden="true"></i></span></a>     
           </div>
            <?php }
            else { ?>
            <div style = "position:relative;left:500px;height:40px">
-           <a href="#loginform" class="btn btn-xs uppercase" data-toggle="modal" data-dismiss="modal">Request For Listing </a>
+           <a href="#loginform" class="btn btn-xs uppercase" data-toggle="modal" data-dismiss="modal">Login To Post</a>
            </div>
            <?php } ?>
       </div>
