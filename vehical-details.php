@@ -341,11 +341,12 @@ $_SESSION['brndid']=$result->bid;
             <div class="form-group">
               <textarea rows="4" class="form-control" name="message" placeholder="Message" required></textarea>
             </div>
-          <?php if($_SESSION['login'])
-              {?>
-              <div class="form-group">
-                <input type="submit" class="btn"  name="submit" value="Book Now">
-              </div>
+          <?php if($email=$_SESSION['login']){ 
+
+        ?>
+        <div class="form-group">
+          <input type="submit" class="btn"  name="submit" value="Book Now">
+        </div>
               <?php } else { ?>
 <a href="#loginform" class="btn btn-xs uppercase" data-toggle="modal" data-dismiss="modal">Login For Book</a>
 
@@ -375,6 +376,7 @@ if($query->rowCount() > 0)
 {
 foreach($results as $result)
 { ?>      
+
         <div class="col-md-3 grid_listing">
           <div class="product-listing-m gray-bg">
             <div class="product-listing-img"> <a href="vehical-details.php?vhid=<?php echo htmlentities($result->id);?>"><img src="admin/img/vehicleimages/<?php echo htmlentities($result->Vimage1);?>" class="img-responsive" alt="image" /> </a>

@@ -146,7 +146,6 @@ foreach($results as $result)
         </div>
 
 
-
                 <?php } else { ?>
  <div class="vehicle_status"> <a href="#" class="btn outline btn-xs">Not Confirm yet</a>
             <div class="clearfix"></div>
