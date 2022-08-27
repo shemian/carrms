@@ -328,6 +328,16 @@ $_SESSION['brndid']=$result->bid;
           <p>Share: <a href="#"><i class="fa fa-facebook-square" aria-hidden="true"></i></a> <a href="#"><i class="fa fa-twitter-square" aria-hidden="true"></i></a> <a href="#"><i class="fa fa-linkedin-square" aria-hidden="true"></i></a> <a href="#"><i class="fa fa-google-plus-square" aria-hidden="true"></i></a> </p>
         </div>
         <div class="sidebar_widget">
+         <?php
+         $Is_Booked= $results[0]->Is_booked;
+         if($Is_Booked){
+          ?>
+            <div class="widget_heading">
+              <h5><i class="fa fa-envelope" aria-hidden="true"></i>Vehicle Not available</h5>
+              <a href="car-listing.php" class="btn">Related Vehicles<span class="angle_arrow"><i class="fa fa-angle-right" aria-hidden="true"></i></span></a>   
+            </div>
+            <?php } else{?>
+
           <div class="widget_heading">
             <h5><i class="fa fa-envelope" aria-hidden="true"></i>Book Now</h5>
           </div>
@@ -341,9 +351,10 @@ $_SESSION['brndid']=$result->bid;
             <div class="form-group">
               <textarea rows="4" class="form-control" name="message" placeholder="Message" required></textarea>
             </div>
-          <?php if($email=$_SESSION['login']){ 
+           
 
-        ?>
+          <?php if($email=$_SESSION['login']){
+          ?>
         <div class="form-group">
           <input type="submit" class="btn"  name="submit" value="Book Now">
         </div>
@@ -351,6 +362,7 @@ $_SESSION['brndid']=$result->bid;
 <a href="#loginform" class="btn btn-xs uppercase" data-toggle="modal" data-dismiss="modal">Login For Book</a>
 
               <?php } ?>
+              <?php }?>
           </form>
         </div>
       </aside>
