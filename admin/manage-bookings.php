@@ -1,39 +1,64 @@
 <?php
 session_start();
-error_reporting(0);
+// error_reporting(0);
 include('includes/config.php');
+include('../Enums/BookingStatus.php');
 if(strlen($_SESSION['alogin'])==0)
 	{	
 header('location:index.php');
 }
 else{
-if(isset($_REQUEST['eid']))
-	{
-$eid=intval($_GET['eid']);
-$status="2";
-$sql = "UPDATE tblbooking SET Status=:status WHERE  id=:eid";
-$query = $dbh->prepare($sql);
-$query -> bindParam(':status',$status, PDO::PARAM_STR);
-$query-> bindParam(':eid',$eid, PDO::PARAM_STR);
-$query -> execute();
 
-$msg="Booking Successfully Cancelled";
+
+if(isset($_REQUEST['booking_id']))
+	{
+$booking_id=intval($_GET['booking_id']);
+
+
+
+
+function confirmOrCancelBooking(Int $booking_id, Int $booking_status, $dbh){
+	$is_booked=1;
+
+	if($booking_status===BookingStatus::CANCELLED || $booking_status===BookingStatus::NOT_CONFIRMED){
+		$is_booked=0;
+	}
+
+	$sql = "SELECT VehicleId From tblbooking  WHERE  id=:booking_id";
+	$query= $dbh -> prepare($sql);
+	$query-> bindParam(':booking_id', $booking_id, PDO::PARAM_STR);
+	$query-> execute();
+	$result=$query->fetch(PDO::FETCH_OBJ);
+	$VehicleId=$result->VehicleId;
+
+
+	$sql = "UPDATE tblvehicles SET Is_booked=:is_booked WHERE  id=:VehicleId";
+	$query = $dbh->prepare($sql);
+	$query -> bindParam(':is_booked',$is_booked, PDO::PARAM_STR);
+	$query-> bindParam(':VehicleId',$VehicleId, PDO::PARAM_STR);
+	$query -> execute();
+
+
+	$sql = "UPDATE tblbooking SET Status=:booking_status WHERE  id=:booking_id";
+	$query = $dbh->prepare($sql);
+	$query -> bindParam(':booking_status',$booking_status, PDO::PARAM_STR);
+	$query-> bindParam(':booking_id',$booking_id, PDO::PARAM_STR);
+	$query -> execute();
+}
+if(isset($_REQUEST['action']))
+{
+	$action = $_GET['action'];
+	if($action==='confirm'){
+		confirmOrCancelBooking($booking_id, BookingStatus::CONFIRMED, $dbh);
+		$msg="Booking Successfully Confirmed";
+	}else{
+		confirmOrCancelBooking($booking_id, BookingStatus::CANCELLED, $dbh);
+		$msg="Booking Successfully Cancelled";
+    }
+}
 }
 
 
-if(isset($_REQUEST['aeid']))
-	{
-$aeid=intval($_GET['aeid']);
-$status=1;
-
-$sql = "UPDATE tblbooking SET Status=:status WHERE  id=:aeid";
-$query = $dbh->prepare($sql);
-$query -> bindParam(':status',$status, PDO::PARAM_STR);
-$query-> bindParam(':aeid',$aeid, PDO::PARAM_STR);
-$query -> execute();
-
-$msg="Booking Successfully Confirmed";
-}
 
 
  ?>
@@ -168,8 +193,8 @@ $msg="Booking Successfully Confirmed";
 										    </td>
 
 											<td><?php echo htmlentities($result->PostingDate);?></td>
-											<td><a href="manage-bookings.php?aeid=<?php echo htmlentities($result->id);?>" onclick="return confirm('Do you really want to Confirm this booking')"> Confirm</a> /
-											<a href="manage-bookings.php?eid=<?php echo htmlentities($result->id);?>" onclick="return confirm('Do you really want to Cancel this Booking')"> Cancel</a>
+											<td><a href="manage-bookings.php?booking_id=<?php echo htmlentities($result->id);?>&action=confirm" onclick="return confirm('Do you really want to Confirm this booking')"> Confirm</a> /
+											<a href="manage-bookings.php?booking_id=<?php echo htmlentities($result->id);?>&action=cancel" onclick="return confirm('Do you really want to Cancel this Booking')"> Cancel</a>
 											</td>
 
 										</tr>
