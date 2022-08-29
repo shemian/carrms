@@ -20,7 +20,7 @@ $booking_id=intval($_GET['booking_id']);
 function confirmOrCancelBooking(Int $booking_id, Int $booking_status, $dbh){
 	$is_booked=1;
 
-	if($booking_status===BookingStatus::CANCELLED || $booking_status===BookingStatus::NOT_CONFIRMED){
+	if($booking_status===BookingStatus::CANCELLED || $booking_status===BookingStatus::NOT_CONFIRMED || $booking_status===BookingStatus::RETURNED){
 		$is_booked=0;
 	}
 
@@ -51,11 +51,16 @@ if(isset($_REQUEST['action']))
 	if($action==='confirm'){
 		confirmOrCancelBooking($booking_id, BookingStatus::CONFIRMED, $dbh);
 		$msg="Booking Successfully Confirmed";
-	}else{
+	}else if($action==='return'){
+		confirmOrCancelBooking($booking_id, BookingStatus::RETURNED, $dbh);
+		$msg="Vehicle returned Successfully";
+	}
+	else{
 		confirmOrCancelBooking($booking_id, BookingStatus::CANCELLED, $dbh);
 		$msg="Booking Successfully Cancelled";
     }
 }
+
 }
 
 
@@ -186,6 +191,9 @@ if(isset($_REQUEST['action']))
 													} else if ($result->Status==1) {
 													echo htmlentities('Confirmed');
 													}
+													else if ($result->Status==5) {
+														echo htmlentities('Returned');
+														}
 													else{
 														echo htmlentities('Cancelled');
 													}
@@ -194,7 +202,8 @@ if(isset($_REQUEST['action']))
 
 											<td><?php echo htmlentities($result->PostingDate);?></td>
 											<td><a href="manage-bookings.php?booking_id=<?php echo htmlentities($result->id);?>&action=confirm" onclick="return confirm('Do you really want to Confirm this booking')"> Confirm</a> /
-											<a href="manage-bookings.php?booking_id=<?php echo htmlentities($result->id);?>&action=cancel" onclick="return confirm('Do you really want to Cancel this Booking')"> Cancel</a>
+											<a href="manage-bookings.php?booking_id=<?php echo htmlentities($result->id);?>&action=cancel" onclick="return confirm('Do you really want to Cancel this Booking')"> Cancel</a>/	
+											<a href="manage-bookings.php?booking_id=<?php echo htmlentities($result->id);?>&action=return" onclick="return confirm('Do you really want to The Return of  this Car')">Returned</a>
 											</td>
 
 										</tr>
