@@ -7,6 +7,9 @@ if(strlen($_SESSION['login'])==0)
 header('location:index.php');
 }
 else{
+  function ConfirmReceival(Int $booking_id, Int $booking_status, $dbh){
+
+  }
 ?><!DOCTYPE HTML>
 <html lang="en">
 <head>
@@ -91,6 +94,7 @@ $query -> bindParam(':useremail',$useremail, PDO::PARAM_STR);
 $query->execute();
 $results=$query->fetchAll(PDO::FETCH_OBJ);
 $cnt=1;
+
 if($query->rowCount() > 0)
 {
 foreach($results as $result)
@@ -134,14 +138,28 @@ foreach($results as $result)
                   <h6><a href="vehical-details.php?vhid=<?php echo htmlentities($result->vid);?>""> <?php echo htmlentities($result->BrandName);?> , <?php echo htmlentities($result->VehiclesTitle);?></a></h6>
                   <p><b>From Date:</b> <?php echo htmlentities($result->FromDate);?><br /> <b>To Date:</b> <?php echo htmlentities($result->ToDate);?></p>
                 </div>
+                
                 <?php if($result->Status==1)
                 { ?>
                 <div class="vehicle_status"> <a href="#" class="btn outline btn-xs active-btn">Confirmed</a>
-                           <div class="clearfix"></div>
-        </div>
+                    <div class="clearfix"></div>
+                </div>
+                <br>
+                
+
 
               <?php } else if($result->Status==2) { ?>
  <div class="vehicle_status"> <a href="#" class="btn outline btn-xs">Cancelled</a>
+            <div class="clearfix"></div>
+        </div>
+
+        <?php } else if($result->Status==4) { ?>
+ <div class="vehicle_status"> <a href="manage-bookings.php?booking_id=&action=confirm" onclick="return confirm('Confirm You have Received the Vehicle')" class="btn outline btn-xs">Confirm Receival</a>
+            <div class="clearfix"></div>
+        </div>
+
+        <?php } else if($result->Status==5) { ?>
+ <div class="vehicle_status"> <a href="#" class="btn outline btn-xs">Returned</a>
             <div class="clearfix"></div>
         </div>
 
