@@ -3,6 +3,7 @@ session_start();
 // error_reporting(0);
 include('includes/config.php');
 include('../Enums/BookingStatus.php');
+include('../includes/updateBooking.php');
 if(strlen($_SESSION['alogin'])==0)
 	{	
 header('location:index.php');
@@ -12,53 +13,21 @@ else{
 
 if(isset($_REQUEST['booking_id']))
 	{
-$booking_id=intval($_GET['booking_id']);
-
-
-
-
-function confirmOrCancelBooking(Int $booking_id, Int $booking_status, $dbh){
-	$is_booked=1;
-
-	if($booking_status===BookingStatus::CANCELLED || $booking_status===BookingStatus::NOT_CONFIRMED || $booking_status===BookingStatus::RETURNED){
-		$is_booked=0;
-	}
-
-	$sql = "SELECT VehicleId From tblbooking  WHERE  id=:booking_id";
-	$query= $dbh -> prepare($sql);
-	$query-> bindParam(':booking_id', $booking_id, PDO::PARAM_STR);
-	$query-> execute();
-	$result=$query->fetch(PDO::FETCH_OBJ);
-	$VehicleId=$result->VehicleId;
-
-
-	$sql = "UPDATE tblvehicles SET Is_booked=:is_booked WHERE  id=:VehicleId";
-	$query = $dbh->prepare($sql);
-	$query -> bindParam(':is_booked',$is_booked, PDO::PARAM_STR);
-	$query-> bindParam(':VehicleId',$VehicleId, PDO::PARAM_STR);
-	$query -> execute();
-
-
-	$sql = "UPDATE tblbooking SET Status=:booking_status WHERE  id=:booking_id";
-	$query = $dbh->prepare($sql);
-	$query -> bindParam(':booking_status',$booking_status, PDO::PARAM_STR);
-	$query-> bindParam(':booking_id',$booking_id, PDO::PARAM_STR);
-	$query -> execute();
-}
-if(isset($_REQUEST['action']))
-{
-	$action = $_GET['action'];
-	if($action==='confirm'){
-		confirmOrCancelBooking($booking_id, BookingStatus::CONFIRMED, $dbh);
-		$msg="Booking Successfully Confirmed";
-	}else if($action==='return'){
-		confirmOrCancelBooking($booking_id, BookingStatus::RETURNED, $dbh);
-		$msg="Vehicle returned Successfully";
-	}
-	else{
-		confirmOrCancelBooking($booking_id, BookingStatus::CANCELLED, $dbh);
-		$msg="Booking Successfully Cancelled";
-    }
+		$booking_id=intval($_GET['booking_id']);
+		if(isset($_REQUEST['action']))
+		{
+			$action = $_GET['action'];
+			if($action==='confirm'){
+				updateBookingStatus($booking_id, BookingStatus::CONFIRMED, $dbh);
+				$msg="Booking Successfully Confirmed";
+			}else if($action==='return'){
+				updateBookingStatus($booking_id, BookingStatus::RETURNED, $dbh);
+				$msg="Vehicle returned Successfully";
+			}
+			else{
+				updateBookingStatus($booking_id, BookingStatus::CANCELLED, $dbh);
+				$msg="Booking Successfully Cancelled";
+			}
 }
 
 }

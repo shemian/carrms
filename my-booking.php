@@ -1,7 +1,10 @@
 <?php
 session_start();
-error_reporting(0);
+// error_reporting(0);
 include('includes/config.php');
+include('includes/updateBooking.php');
+include('Enums/BookingStatus.php'); 
+
 if(strlen($_SESSION['login'])==0)
   {
 header('location:index.php');
@@ -122,7 +125,7 @@ foreach($results as $result)
             <ul class="vehicle_listing">
             <?php
             $useremail=$_SESSION['login'];
-            $sql = "SELECT tblvehicles.Vimage1 as Vimage1,tblvehicles.VehiclesTitle,tblvehicles.id as vid,tblbrands.BrandName,tblbooking.FromDate,tblbooking.ToDate,tblbooking.message,tblbooking.Status  from tblbooking join tblvehicles on tblbooking.VehicleId=tblvehicles.id join tblbrands on tblbrands.id=tblvehicles.VehiclesBrand where tblbooking.userEmail=:useremail";
+            $sql = "SELECT tblvehicles.Vimage1 as Vimage1,tblvehicles.VehiclesTitle,tblvehicles.id as vid,tblbrands.BrandName,tblbooking.FromDate,tblbooking.ToDate,tblbooking.message,tblbooking.id as booking_id,tblbooking.Status  from tblbooking join tblvehicles on tblbooking.VehicleId=tblvehicles.id join tblbrands on tblbrands.id=tblvehicles.VehiclesBrand where tblbooking.userEmail=:useremail";
             $query = $dbh -> prepare($sql);
             $query-> bindParam(':useremail', $useremail, PDO::PARAM_STR);
             $query->execute();
@@ -137,37 +140,50 @@ foreach($results as $result)
                 <div class="vehicle_title">
                   <h6><a href="vehical-details.php?vhid=<?php echo htmlentities($result->vid);?>""> <?php echo htmlentities($result->BrandName);?> , <?php echo htmlentities($result->VehiclesTitle);?></a></h6>
                   <p><b>From Date:</b> <?php echo htmlentities($result->FromDate);?><br /> <b>To Date:</b> <?php echo htmlentities($result->ToDate);?></p>
+                  <?php
+                  switch ($result->Status) {
+                      case 1:
+                          $vehicle_status= "Confirmed";
+                          break;
+                      case 0:
+                          $vehicle_status= "Not Confirmed Yet";
+                          break;
+                      case 3:
+                          $vehicle_status= "CANCELLED";
+                          break;
+                      case 4:
+                          $vehicle_status= "RECEIVED";
+                          break;
+                      case 5:
+                          $vehicle_status= "RETURNED";
+                          break;
+                      default:
+                      $vehicle_status= "Wait For Admin Response";
+                  }
+                  
+                  ?>
+                  <p><b>Status: </b> <?php echo htmlentities($vehicle_status);?><br />
+                  
                 </div>
                 
-                <?php if($result->Status==1)
+                <?php if($vehicle_status = "Confirmed")
+                if(isset($_REQUEST['booking_id']))
+                {
+                  $booking_id=intval($_GET['booking_id']);
+                  if(isset($_REQUEST['action']))
+                  {
+                    $action = $_GET['action'];
+                    if($action==='confirm'){
+                      updateBookingStatus($booking_id, BookingStatus::CONFIRMED, $dbh);
+                      $msg="Booking Successfully Confirmed";
+                    }
+                  }
+                }
+
                 { ?>
-                <div class="vehicle_status"> <a href="#" class="btn outline btn-xs active-btn">Confirmed</a>
-                    <div class="clearfix"></div>
-                </div>
-                <br>
-                
-
-
-              <?php } else if($result->Status==2) { ?>
- <div class="vehicle_status"> <a href="#" class="btn outline btn-xs">Cancelled</a>
-            <div class="clearfix"></div>
-        </div>
-
-        <?php } else if($result->Status==4) { ?>
- <div class="vehicle_status"> <a href="manage-bookings.php?booking_id=&action=confirm" onclick="return confirm('Confirm You have Received the Vehicle')" class="btn outline btn-xs">Confirm Receival</a>
-            <div class="clearfix"></div>
-        </div>
-
-        <?php } else if($result->Status==5) { ?>
- <div class="vehicle_status"> <a href="#" class="btn outline btn-xs">Returned</a>
-            <div class="clearfix"></div>
-        </div>
-
-
-                <?php } else { ?>
- <div class="vehicle_status"> <a href="#" class="btn outline btn-xs">Not Confirm yet</a>
-            <div class="clearfix"></div>
-        </div>
+                <div class="vehicle_status"> <a class="btn outline btn-xs active-btn" href="my-booking.php?booking_id=<?php echo htmlentities($result->booking_id);?>&action=confirm" onclick="return confirm('Confirm Receival of the Car')"> Confirm Receival</a>
+                <div class="clearfix"></div>
+         
                 <?php } ?>
        <div style="float: left"><p><b>Message:</b> <?php echo htmlentities($result->message);?> </p></div>
               </li>

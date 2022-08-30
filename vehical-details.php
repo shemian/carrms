@@ -329,6 +329,7 @@ $_SESSION['brndid']=$result->bid;
         </div>
         <div class="sidebar_widget">
          <?php
+
          $Is_Booked= $results[0]->Is_booked;
          if($Is_Booked){
           ?>
@@ -337,6 +338,7 @@ $_SESSION['brndid']=$result->bid;
               <a href="car-listing.php" class="btn">Related Vehicles<span class="angle_arrow"><i class="fa fa-angle-right" aria-hidden="true"></i></span></a>   
             </div>
             <?php } else{?>
+              
 
           <div class="widget_heading">
             <h5><i class="fa fa-envelope" aria-hidden="true"></i>Book Now</h5>
@@ -411,6 +413,7 @@ foreach($results as $result)
       </div>
     </div>
     <!--/Similar-Cars--> 
+ 
     
   </div>
 </section>
