@@ -2,11 +2,14 @@
 //error_reporting(0);
 if(isset($_POST['signup']))
 {
+
 $fname=$_POST['fullname'];
 $email=$_POST['emailid']; 
 $mobile=$_POST['mobileno'];
-$password=md5($_POST['password']); 
+$password=md5($_POST['password']);
+
 $sql="INSERT INTO  tblusers(FullName,EmailId,ContactNo,Password) VALUES(:fname,:email,:mobile,:password)";
+
 $query = $dbh->prepare($sql);
 $query->bindParam(':fname',$fname,PDO::PARAM_STR);
 $query->bindParam(':email',$email,PDO::PARAM_STR);
@@ -14,6 +17,7 @@ $query->bindParam(':mobile',$mobile,PDO::PARAM_STR);
 $query->bindParam(':password',$password,PDO::PARAM_STR);
 $query->execute();
 $lastInsertId = $dbh->lastInsertId();
+
 if($lastInsertId)
 {
 echo "<script>alert('Registration successfull. Now you can login');</script>";
@@ -28,6 +32,7 @@ echo "<script>alert('Something went wrong. Please try again');</script>";
 
 
 <script>
+  
 function checkAvailability() {
 $("#loaderIcon").show();
 jQuery.ajax({
@@ -65,6 +70,7 @@ return true;
         <div class="row">
           <div class="signup_wrap">
             <div class="col-md-12 col-sm-6">
+
               <form  method="post" name="signup" onSubmit="return valid();">
                 <div class="form-group">
                   <input type="text" class="form-control" name="fullname" placeholder="Full Name" required="required">

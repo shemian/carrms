@@ -4,6 +4,7 @@ session_start();
 include('includes/config.php');
 include('../Enums/BookingStatus.php');
 include('../includes/updateBooking.php');
+
 if(strlen($_SESSION['alogin'])==0)
 	{	
 header('location:index.php');

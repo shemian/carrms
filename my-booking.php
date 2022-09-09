@@ -157,6 +157,7 @@ foreach($results as $result)
                       case 5:
                           $vehicle_status= "RETURNED";
                           break;
+                          
                       default:
                       $vehicle_status= "Wait For Admin Response";
                   }
@@ -165,8 +166,7 @@ foreach($results as $result)
                   <p><b>Status: </b> <?php echo htmlentities($vehicle_status);?><br />
                   
                 </div>
-                
-                <?php if($vehicle_status = "Confirmed")
+                <?php
                 if(isset($_REQUEST['booking_id']))
                 {
                   $booking_id=intval($_GET['booking_id']);
@@ -179,7 +179,10 @@ foreach($results as $result)
                     }
                   }
                 }
-
+                
+                ?>
+                
+                <?php if($vehicle_status = "Confirmed")
                 { ?>
                 <div class="vehicle_status"> <a class="btn outline btn-xs active-btn" href="my-booking.php?booking_id=<?php echo htmlentities($result->booking_id);?>&action=confirm" onclick="return confirm('Confirm Receival of the Car')"> Confirm Receival</a>
                 <div class="clearfix"></div>

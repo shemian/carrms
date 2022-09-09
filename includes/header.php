@@ -1,29 +1,5 @@
 
 <header>
-  <div class="default-header">
-    <div class="container">
-      <div class="row">
-        <div class="col-sm-3 col-md-2">
-          <div class="logo"> <a href="index.php"><img src="assets/images/logg.png" alt="image"/></a> </div>
-        </div>
-        <div class="col-sm-9 col-md-10">
-          <div class="header_info">
-            <div class="header_widgets">
-   <?php   if(strlen($_SESSION['login'])==0)
-	{
-?>
- <div class="login_btn"> <a href="#loginform" class="btn btn-xs uppercase" data-toggle="modal" data-dismiss="modal">Login / Register</a> </div>
-<?php }
-else{
-
-echo "Welcome To Car rental portal";
- } ?>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- Navigation -->
   <nav id="navigation_bar" class="navbar navbar-default">
     <div class="container">
@@ -70,11 +46,7 @@ foreach($results as $result)
           </ul>
         </div>
         <div class="header_search">
-          <div id="search_toggle"><i class="fa fa-search" aria-hidden="true"></i></div>
-          <form action="#" method="get" id="header-search-form">
-            <input type="text" placeholder="Search..." class="form-control">
-            <button type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
-          </form>
+        <div class="login_btn"> <a href="#loginform" class="btn btn-xs uppercase" data-toggle="modal" data-dismiss="modal">Login / Register</a> </div>
         </div>
       </div>
       <div class="collapse navbar-collapse" id="navigation">
@@ -86,6 +58,7 @@ foreach($results as $result)
           <li><a href="car-listing.php">Car Listing</a>
           <li><a href="page.php?type=faqs">FAQs</a></li>
           <li><a href="contact-us.php">Contact Us</a></li>
+
 
         </ul>
       </div>
